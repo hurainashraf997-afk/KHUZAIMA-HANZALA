@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computer Knowledge Test - Interactive Quiz</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --accent: #0f172a;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border: #e2e8f0;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 1.6rem;
+            margin-bottom: 6px;
+        }
+        
+        header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        
+        #start-screen {
+            text-align: center;
+        }
+        
+        #start-screen h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .instructions {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary-light);
+            padding: 16px;
+            text-align: left;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+        }
+        
+        .instructions ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+        
+        .form-group {
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-secondary {
+            background-color: #64748b;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #475569;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+        }
+        
+        .btn-success:hover {
+            background-color: #059669;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+        
+        .quiz-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background-color: var(--border);
+            border-radius: 4px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-light);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .question-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 20px;
+        }
+        
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: white;
+        }
+        
+        .option-item:hover {
+            border-color: var(--primary-light);
+            background-color: #f8fafc;
+        }
+        
+        .option-item input[type="radio"] {
+            margin-right: 12px;
+            accent-color: var(--primary);
+            width: 18px;
+            height: 18px;
+        }
+        
+        .option-text {
+            font-size: 1rem;
+            color: var(--text-main);
+            width: 100%;
+        }
+        
+        .option-item.selected {
+            border-color: var(--primary);
+            background-color: #eff6ff;
+        }
+        
+        .quiz-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #warning-banner {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fef2f2;
+            border: 2px solid var(--danger);
+            color: #991b1b;
+            padding: 16px 24px;
+            border-radius: 10px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translate(-50%, -20px); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+        
+        #warning-banner h4 {
+            margin-bottom: 6px;
+            font-size: 1.05rem;
+        }
+        
+        #warning-banner p {
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+        
+        .results-summary {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+        }
+        
+        .score-circle span:first-child {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .score-circle span:last-child {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-card h5 {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+        
+        .stat-card p {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        
+        .review-section {
+            margin-top: 30px;
+            text-align: left;
+        }
+        
+        .review-section h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .review-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--danger);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .review-card.correct {
+            border-left-color: var(--success);
+        }
+        
+        .review-card p.q-text {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .review-card p.ans-info {
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+        
+        .review-card p.explanation {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+            font-style: italic;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .teacher-note {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .watermark {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: #64748b;
+            opacity: 0.8;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="warning-banner">
+        <h4 id="warning-title">⚠️ Warning! Tab Switch Detected</h4>
+        <p id="warning-msg">Do not switch tabs during the quiz. Your activity is being monitored.</p>
+        <button class="btn btn-danger" id="dismiss-warning" style="padding: 6px 16px; font-size: 0.85rem;">I Understand, Continue</button>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Computer Knowledge Test</h1>
+            <p>Interactive Student Assessment • Prepared by Hurain M Ashraf</p>
+        </header>
+
+        <div id="start-screen" class="card">
+            <h2>Welcome to the Online Quiz</h2>
+            <p>Please enter your full name below before beginning the assessment. Make sure you stay on this tab during the test.</p>
+            
+            <div class="form-group">
+                <label for="student-name">Student Full Name:</label>
+                <input type="text" id="student-name" placeholder="Enter your full name..." autocomplete="off">
+            </div>
+
+            <div class="instructions">
+                <strong>📋 Quiz Instructions:</strong>
+                <ul>
+                    <li>Total Questions: 30 Multiple Choice Questions.</li>
+                    <li>Navigation: Use Previous and Next buttons to move between questions. You can change your answers anytime before submitting.</li>
+                    <li>Scoring: Automatically marked out of 30 marks.</li>
+                    <li>Anti-Cheating Policy: Switching tabs or leaving the page will trigger a warning. A second violation will automatically submit your quiz.</li>
+                </ul>
+            </div>
+
+            <button class="btn" id="start-btn">Start Quiz</button>
+        </div>
+
+        <div id="quiz-screen" class="card hidden">
+            <div class="quiz-meta">
+                <span id="student-display-name">Student: </span>
+                <span id="question-counter">Question 1 of 30</span>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <div class="question-title" id="question-text">Question text goes here...</div>
+
+            <div class="options-list" id="options-container">
+            </div>
+
+            <div class="quiz-nav">
+                <button class="btn btn-secondary" id="prev-btn">Previous</button>
+                <button class="btn" id="next-btn">Next</button>
+                <button class="btn btn-success hidden" id="submit-btn">Submit Quiz</button>
+            </div>
+        </div>
+
+        <div id="results-screen" class="card hidden">
+            <div class="results-summary">
+                <h2>Quiz Completed Successfully!</h2>
+                <p id="result-student-name" style="font-weight: 600; margin-bottom: 20px; color: var(--primary);"></p>
+                
+                <div class="score-circle">
+                    <span id="score-val">0/30</span>
+                    <span id="score-percentage">0%</span>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h5>Correct</h5>
+                        <p id="correct-count" style="color: var(--success);">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h5>Incorrect</h5>
+                        <p id="incorrect-count" style="color: var(--danger);">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h5>Final Score</h5>
+                        <p id="final-score-val">0 / 30</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-section">
+                <h3>Review of Incorrect Answers & Explanations</h3>
+                <div id="incorrect-review-list">
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" id="restart-btn">Restart Quiz</button>
+            </div>
+        </div>
+
+        <div class="teacher-note">
+            Note: Browser tab-switch detection has technical limitations and may not detect every possible violation.
+        </div>
+
+        <div class="watermark">
+            Developed with ❤️ by HURAIN ASHRAF
+        </div>
+    </div>
+
+    <script>
+        const questionsData = [
+            {
+                "id": 1,
+                "question": "What is the full form of CPU?",
+                "options": ["Central Processing Unit", "Computer Personal Unit", "Central Program Utility", "Control Processing User"],
+                "answer": 0,
+                "explanation": "CPU stands for Central Processing Unit, known as the brain of the computer."
+            },
+            {
+                "id": 2,
+                "question": "Which device is used to type text?",
+                "options": ["Monitor", "Keyboard", "Speaker", "Printer"],
+                "answer": 1,
+                "explanation": "A keyboard is an input device used for typing text and entering data."
+            },
+            {
+                "id": 3,
+                "question": "Which of the following is an input device?",
+                "options": ["Printer", "Monitor", "Mouse", "Speaker"],
+                "answer": 2,
+                "explanation": "A mouse is an input device used to interact with items on a computer screen."
+            },
+            {
+                "id": 4,
+                "question": "Which shortcut is used to copy selected text?",
+                "options": ["Ctrl + V", "Ctrl + X", "Ctrl + C", "Ctrl + Z"],
+                "answer": 2,
+                "explanation": "Ctrl + C is the standard keyboard shortcut to copy selected text or items."
+            },
+            {
+                "id": 5,
+                "question": "Which of these is an operating system?",
+                "options": ["MS Word", "Windows", "Google Chrome", "MS Excel"],
+                "answer": 1,
+                "explanation": "Windows is an operating system that manages computer hardware and software."
+            },
+            {
+                "id": 6,
+                "question": "What does CC stand for in an email?",
+                "options": ["Carbon Copy", "Computer Copy", "Common Contact", "Current Copy"],
+                "answer": 0,
+                "explanation": "CC stands for Carbon Copy, used to send a copy of an email to additional recipients."
+            },
+            {
+                "id": 7,
+                "question": "Which symbol is necessary in an email address?",
+                "options": ["#", "@", "&", "%"],
+                "answer": 1,
+                "explanation": "The '@' (at) symbol separates the username from the domain name in every email address."
+            },
+            {
+                "id": 8,
+                "question": "Which of the following is used to send an email?",
+                "options": ["MS Paint", "Gmail", "Calculator", "MS Excel"],
+                "answer": 1,
+                "explanation": "Gmail is a web-based email service used to send and receive electronic mail."
+            },
+            {
+                "id": 9,
+                "question": "What is the purpose of the Subject field in an email?",
+                "options": ["Attach files", "Write a short email title", "Delete an email", "Enter a password"],
+                "answer": 1,
+                "explanation": "The Subject field provides a brief summary or title of what the email is about."
+            },
+            {
+                "id": 10,
+                "question": "Which shortcut makes selected text bold in MS Word?",
+                "options": ["Ctrl + I", "Ctrl + U", "Ctrl + B", "Ctrl + P"],
+                "answer": 2,
+                "explanation": "Ctrl + B is the keyboard shortcut used to make selected text bold."
+            },
+            {
+                "id": 11,
+                "question": "Which feature checks spelling mistakes in MS Word?",
+                "options": ["Word Count", "Spelling & Grammar", "Page Color", "Zoom"],
+                "answer": 1,
+                "explanation": "Spelling & Grammar checks and highlights spelling and grammatical errors in a document."
+            },
+            {
+                "id": 12,
+                "question": "Which shortcut is used to save a document?",
+                "options": ["Ctrl + S", "Ctrl + A", "Ctrl + F", "Ctrl + N"],
+                "answer": 0,
+                "explanation": "Ctrl + S is the universal keyboard shortcut to save active documents or files."
+            },
+            {
+                "id": 13,
+                "question": "Which alignment places text in the center?",
+                "options": ["Left Align", "Right Align", "Center Align", "Justify"],
+                "answer": 2,
+                "explanation": "Center Align places paragraphs or lines of text squarely in the middle of the page."
+            },
+            {
+                "id": 14,
+                "question": "In MS Excel, a formula usually starts with which symbol?",
+                "options": ["#", "=", "@", "&"],
+                "answer": 1,
+                "explanation": "Every formula or function in MS Excel must begin with an equal sign (=)."
+            },
+            {
+                "id": 15,
+                "question": "Which formula is used to add values in Excel?",
+                "options": ["=COUNT()", "=SUM()", "=MAX()", "=AVERAGE()"],
+                "answer": 1,
+                "explanation": "=SUM() is the Excel function used to calculate the total sum of a range of numbers."
+            },
+            {
+                "id": 16,
+                "question": "What is the intersection of a row and column called?",
+                "options": ["Sheet", "Cell", "Workbook", "Formula"],
+                "answer": 1,
+                "explanation": "A cell is the individual box formed where a row and column intersect in a spreadsheet."
+            },
+            {
+                "id": 17,
+                "question": "Which formula calculates the average of numbers in Excel?",
+                "options": ["=SUM()", "=MIN()", "=AVERAGE()", "=COUNT()"],
+                "answer": 2,
+                "explanation": "=AVERAGE() calculates the arithmetic mean of a selected group of numbers in Excel."
+            },
+            {
+                "id": 18,
+                "question": "If A1=10 and B1=20, what will =A1+B1 return?",
+                "options": ["10", "20", "30", "200"],
+                "answer": 2,
+                "explanation": "Adding 10 and 20 together results in 30."
+            },
+            {
+                "id": 19,
+                "question": "Which Excel function finds the highest value?",
+                "options": ["MIN", "MAX", "SUM", "COUNT"],
+                "answer": 1,
+                "explanation": "The MAX function evaluates a range of cells and returns the highest (maximum) value."
+            },
+            {
+                "id": 20,
+                "question": "What is the main purpose of MS PowerPoint?",
+                "options": ["Create presentations", "Calculate salaries", "Send emails", "Manage files"],
+                "answer": 0,
+                "explanation": "MS PowerPoint is designed to create professional slideshows and visual presentations."
+            },
+            {
+                "id": 21,
+                "question": "Which feature is used to add movement effects to objects in PowerPoint?",
+                "options": ["Design", "Animation", "Layout", "Review"],
+                "answer": 1,
+                "explanation": "Animations add motion effects to individual objects (text, images, shapes) on a slide."
+            },
+            {
+                "id": 22,
+                "question": "What is a slide transition?",
+                "options": ["An effect between slides", "A formula", "A spelling tool", "A type of chart"],
+                "answer": 0,
+                "explanation": "A slide transition is the visual effect that occurs when moving from one slide to the next."
+            },
+            {
+                "id": 23,
+                "question": "Which option is used to add a picture to a PowerPoint slide?",
+                "options": ["Review", "Insert", "View", "File"],
+                "answer": 1,
+                "explanation": "The Insert tab contains options to add pictures, shapes, and media to slides."
+            },
+            {
+                "id": 24,
+                "question": "What does the word 'Digital' usually refer to?",
+                "options": ["Paper-based work", "Electronic technology and computer-based information", "Only newspaper ads", "Handwritten letters"],
+                "answer": 1,
+                "explanation": "Digital refers to electronic technology that generates, stores, and processes data in binary form."
+            },
+            {
+                "id": 25,
+                "question": "What is the main purpose of marketing?",
+                "options": ["To attract customers and promote products", "To repair computers", "To write formulas", "To create folders"],
+                "answer": 0,
+                "explanation": "Marketing aims to communicate value, promote products, and attract prospective customers."
+            },
+            {
+                "id": 26,
+                "question": "Which is an example of digital marketing?",
+                "options": ["Newspaper advertisement", "Roadside billboard", "Instagram product promotion", "Printed flyer"],
+                "answer": 2,
+                "explanation": "Promoting products on Instagram utilizes online digital platforms and internet marketing."
+            },
+            {
+                "id": 27,
+                "question": "Which is an example of traditional marketing?",
+                "options": ["YouTube advertisement", "Facebook advertisement", "Newspaper advertisement", "Email campaign"],
+                "answer": 2,
+                "explanation": "Newspaper advertisements represent traditional print media marketing."
+            },
+            {
+                "id": 28,
+                "question": "Which platform can be used for digital marketing?",
+                "options": ["Instagram", "MS Paint", "Calculator", "Notepad"],
+                "answer": 0,
+                "explanation": "Instagram is a social media platform widely used for digital marketing campaigns."
+            },
+            {
+                "id": 29,
+                "question": "Which of the following is an example of online advertising?",
+                "options": ["Newspaper", "Printed Poster", "YouTube Ads", "Billboard"],
+                "answer": 2,
+                "explanation": "YouTube Ads are digital video advertisements displayed on the internet."
+            },
+            {
+                "id": 30,
+                "question": "A shop shares a free product announcement on its Instagram page. This is an example of:",
+                "options": ["Digital promotion", "Newspaper advertising", "Offline printing", "Traditional marketing only"],
+                "answer": 0,
+                "explanation": "Sharing announcements on social media pages is a direct form of digital promotion."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let studentName = "";
+        let userAnswers = new Array(questionsData.length).fill(null);
+        let tabSwitchViolations = 0;
+        let quizSubmitted = false;
+
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const startBtn = document.getElementById('start-btn');
+        const studentNameInput = document.getElementById('student-name');
+        const studentDisplayName = document.getElementById('student-display-name');
+        const questionCounter = document.getElementById('question-counter');
+        const progressBar = document.getElementById('progress-bar');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const warningBanner = document.getElementById('warning-banner');
+        const warningTitle = document.getElementById('warning-title');
+        const warningMsg = document.getElementById('warning-msg');
+        const dismissWarning = document.getElementById('dismiss-warning');
+
+        startBtn.addEventListener('click', () => {
+            const nameVal = studentNameInput.value.trim();
+            if (!nameVal) {
+                alert('Please enter your full name to start the quiz.');
+                studentNameInput.focus();
+                return;
+            }
+            studentName = nameVal;
+            studentDisplayName.textContent = `Student: ${studentName}`;
+            
+            startScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            loadQuestion(currentQuestionIndex);
+        });
+
+        function loadQuestion(index) {
+            const q = questionsData[index];
+            questionCounter.textContent = `Question ${index + 1} of ${questionsData.length}`;
+            questionText.textContent = `${index + 1}. ${q.question}`;
+            
+            const progress = ((index + 1) / questionsData.length) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            optionsContainer.innerHTML = '';
+            q.options.forEach((opt, optIdx) => {
+                const isSelected = userAnswers[index] === optIdx;
+                const optionItem = document.createElement('label');
+                optionItem.className = `option-item ${isSelected ? 'selected' : ''}`;
+                optionItem.innerHTML = `
+                    <input type="radio" name="question-${index}" value="${optIdx}" ${isSelected ? 'checked' : ''}>
+                    <span class="option-text">${String.fromCharCode(65 + optIdx)}. ${opt}</span>
+                `;
+                
+                optionItem.querySelector('input').addEventListener('change', () => {
+                    userAnswers[index] = optIdx;
+                    document.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+                    optionItem.classList.add('selected');
+                });
+
+                optionsContainer.appendChild(optionItem);
+            });
+
+            prevBtn.style.display = index === 0 ? 'none' : 'inline-flex';
+            if (index === questionsData.length - 1) {
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+            }
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion(currentQuestionIndex);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < questionsData.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion(currentQuestionIndex);
+            }
+        });
+
+        submitBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to submit your quiz?')) {
+                finishQuiz();
+            }
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (quizSubmitted || startScreen.classList.contains('hidden')) {
+                if (document.hidden && !quizSubmitted && startScreen.classList.contains('hidden')) {
+                    tabSwitchViolations++;
+                    if (tabSwitchViolations === 1) {
+                        warningTitle.textContent = "⚠️ Warning 1 of 2: Tab Switch Detected";
+                        warningMsg.textContent = "Do not switch tabs during the quiz. Your activity is being monitored. A second violation will automatically submit your quiz.";
+                        warningBanner.style.display = 'block';
+                    } else if (tabSwitchViolations >= 2) {
+                        warningTitle.textContent = "🚨 Maximum Violations Reached";
+                        warningMsg.textContent = "You switched tabs again. Your quiz is being automatically submitted.";
+                        warningBanner.style.display = 'block';
+                        setTimeout(() => {
+                            warningBanner.style.display = 'none';
+                            finishQuiz();
+                        }, 2000);
+                    }
+                }
+            }
+        });
+
+        dismissWarning.addEventListener('click', () => {
+            warningBanner.style.display = 'none';
+        });
+
+        function finishQuiz() {
+            if (quizSubmitted) return;
+            quizSubmitted = true;
+            warningBanner.style.display = 'none';
+
+            let correctCount = 0;
+            let incorrectListHTML = '';
+
+            questionsData.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.answer;
+                if (isCorrect) {
+                    correctCount++;
+                } else {
+                    const userAnsText = userAns !== null ? `${String.fromCharCode(65 + userAns)}. ${q.options[userAns]}` : "No Answer Selected";
+                    const correctAnsText = `${String.fromCharCode(65 + q.answer)}. ${q.options[q.answer]}`;
+                    
+                    incorrectListHTML += `
+                        <div class="review-card">
+                            <p class="q-text">Q${idx + 1}: ${q.question}</p>
+                            <p class="ans-info" style="color: var(--danger);">Your Answer: ${userAnsText}</p>
+                            <p class="ans-info" style="color: var(--success);">Correct Answer: ${correctAnsText}</p>
+                            <p class="explanation">💡 <strong>Explanation:</strong> ${q.explanation}</p>
+                        </div>
+                    `;
+                }
+            });
+
+            const incorrectCount = questionsData.length - correctCount;
+            const percentage = Math.round((correctCount / questionsData.length) * 100);
+
+            document.getElementById('result-student-name').textContent = `Student: ${studentName}`;
+            document.getElementById('score-val').textContent = `${correctCount}/${questionsData.length}`;
+            document.getElementById('score-percentage').textContent = `${percentage}%`;
+            document.getElementById('correct-count').textContent = correctCount;
+            document.getElementById('incorrect-count').textContent = incorrectCount;
+            document.getElementById('final-score-val').textContent = `${correctCount} / 30`;
+
+            const reviewContainer = document.getElementById('incorrect-review-list');
+            if (incorrectCount === 0) {
+                reviewContainer.innerHTML = `<p style="color: var(--success); font-weight: 600; text-align: center; padding: 20px;">🎉 Outstanding! You answered all 30 questions correctly!</p>`;
+            } else {
+                reviewContainer.innerHTML = incorrectListHTML;
+            }
+
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+        }
+
+        document.getElementById('restart-btn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to restart? All your answers will be cleared.')) {
+                currentQuestionIndex = 0;
+                userAnswers = new Array(questionsData.length).fill(null);
+                tabSwitchViolations = 0;
+                quizSubmitted = false;
+                studentNameInput.value = '';
+                resultsScreen.classList.add('hidden');
+                startScreen.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
